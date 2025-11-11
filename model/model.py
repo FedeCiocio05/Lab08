@@ -1,4 +1,5 @@
 from database.impianto_DAO import ImpiantoDAO
+from model.impianto_DTO import Impianto
 
 '''
     MODELLO:
@@ -25,6 +26,22 @@ class Model:
         :param mese: Mese selezionato (un intero da 1 a 12)
         :return: lista di tuple --> (nome dell'impianto, media), es. (Impianto A, 123)
         """
+        risultati = []
+
+        for impianto in self._impianti:
+            count = 0
+            somma = 0
+
+            for consumo in impianto.get_consumi():
+                #data = datetime.strptime(consumo.data, "%Y-%m-%d")
+                if consumo.data.month == mese:
+                    somma = somma + consumo.kwh
+                    count +=1
+
+            media = somma / count
+            risultati.append((impianto.nome, media))
+        return risultati
+
         # TODO
 
     def get_sequenza_ottima(self, mese:int):
